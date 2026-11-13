@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "Cross stitch",
+    "schemeRegion": "Chart area"
+  },
+  "toolbar": {
+    "palette": "Thread palette",
+    "blockGrid": "Block grid",
+    "navigator": "Navigate to nearest stitch",
+    "compass": "Compass — measure distance",
+    "progress": "Progress view"
+  },
+  "palette": {
+    "title": "Palette",
+    "searchPlaceholder": "Code",
+    "searchAria": "Search by thread code",
+    "columns": {
+      "symbol": "Symbol",
+      "code": "Code",
+      "color": "Color",
+      "active": "Active",
+      "exclude": "Exclude"
+    },
+    "setActive": "Set color {code} as active",
+    "excludeFromStats": "Exclude color {code} from stats and done marks"
+  },
+  "settings": {
+    "title": "Settings",
+    "open": "Open settings",
+    "reset": "Reset settings to defaults",
+    "language": {
+      "title": "Language",
+      "choose": "Choose language: {name}"
+    },
+    "display": {
+      "title": "Display",
+      "darkTheme": "Dark theme",
+      "softenOnZoom": "Soften colors when zoomed in",
+      "washColor": "Fill wash color",
+      "veilColor": "Out-of-focus veil color",
+      "doneVeilColor": "Done stitch overlay",
+      "cellDividerColor": "Cell divider color"
+    },
+    "activeCells": {
+      "title": "Active color",
+      "color": "Highlight color"
+    },
+    "grid": {
+      "title": "Block grid",
+      "size": "Block size (stitches)",
+      "color": "Grid line color"
+    },
+    "navigator": {
+      "title": "Navigator",
+      "color": "Route color",
+      "secondaryColor": "Route label background"
+    },
+    "compass": {
+      "title": "Compass",
+      "color": "Route color",
+      "secondaryColor": "Route label background"
+    },
+    "progress": {
+      "title": "Progress",
+      "autoOnZoomOut": "Turn on when zoomed out",
+      "color": "Done color in progress view"
+    }
+  },
+  "common": {
+    "close": "Close",
+    "clear": "Clear field",
+    "dragToClose": "Pull down to close"
+  }
+}

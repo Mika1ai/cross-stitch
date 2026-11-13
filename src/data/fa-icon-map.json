@@ -1,0 +1,537 @@
+{
+    "far fa-moon": {
+        "unicode": "f186",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-arrow-alt-circle-up": {
+        "unicode": "f35b",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-angle-double-right": {
+        "unicode": "f101",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-heart": {
+        "unicode": "f004",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-star": {
+        "unicode": "f005",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-minus-square": {
+        "unicode": "f146",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-anchor": {
+        "unicode": "f13d",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-gem": {
+        "unicode": "f3a5",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-paperclip": {
+        "unicode": "f0c6",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-play-circle": {
+        "unicode": "f144",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-hand-paper": {
+        "unicode": "f256",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-calendar-plus": {
+        "unicode": "f271",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-adjust": {
+        "unicode": "f042",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-lightbulb": {
+        "unicode": "f0eb",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-grin": {
+        "unicode": "f580",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-eye": {
+        "unicode": "f06e",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-neuter": {
+        "unicode": "f22c",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-hourglass": {
+        "unicode": "f254",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-apple-alt": {
+        "unicode": "f5d1",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-hand-lizard": {
+        "unicode": "f258",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-power-off": {
+        "unicode": "f011",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-arrow-alt-circle-left": {
+        "unicode": "f359",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-hdd": {
+        "unicode": "f0a0",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-hand-peace": {
+        "unicode": "f25b",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-map": {
+        "unicode": "f279",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-paper-plane": {
+        "unicode": "f1d8",
+        "char": "",
+        "weight": 400
+    },
+    "far fa-square": {
+        "unicode": "f0c8",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-balance-scale": {
+        "unicode": "f24e",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-battery-half": {
+        "unicode": "f242",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-beer": {
+        "unicode": "f0fc",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-bell": {
+        "unicode": "f0f3",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-birthday-cake": {
+        "unicode": "f1fd",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-bolt": {
+        "unicode": "f0e7",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-bone": {
+        "unicode": "f5d7",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-bong": {
+        "unicode": "f55c",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-box-open": {
+        "unicode": "f49e",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cubes": {
+        "unicode": "f1b3",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-bug": {
+        "unicode": "f188",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-burn": {
+        "unicode": "f46a",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-bus": {
+        "unicode": "f207",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cannabis": {
+        "unicode": "f55f",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-capsules": {
+        "unicode": "f46b",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-car-side": {
+        "unicode": "f5e4",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-check": {
+        "unicode": "f00c",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-chess-knight": {
+        "unicode": "f441",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-chess-pawn": {
+        "unicode": "f443",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-chess-board": {
+        "unicode": "f43c",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-child": {
+        "unicode": "f1ae",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-flag-checkered": {
+        "unicode": "f11e",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-circle": {
+        "unicode": "f111",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cocktail": {
+        "unicode": "f561",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cog": {
+        "unicode": "f013",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-crow": {
+        "unicode": "f520",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cut": {
+        "unicode": "f0c4",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-desktop": {
+        "unicode": "f108",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-drafting-compass": {
+        "unicode": "f568",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-drum": {
+        "unicode": "f569",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-dumbbell": {
+        "unicode": "f44b",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-ellipsis-v": {
+        "unicode": "f142",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-envelope": {
+        "unicode": "f0e0",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-fire": {
+        "unicode": "f06d",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-gavel": {
+        "unicode": "f0e3",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-glasses": {
+        "unicode": "f530",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-headphones": {
+        "unicode": "f025",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-helicopter": {
+        "unicode": "f533",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-life-ring": {
+        "unicode": "f1cd",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-link": {
+        "unicode": "f0c1",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-lock": {
+        "unicode": "f023",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-map-marker-alt": {
+        "unicode": "f3c5",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-microphone-alt": {
+        "unicode": "f3c9",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-music": {
+        "unicode": "f001",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-oil-can": {
+        "unicode": "f613",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-paint-roller": {
+        "unicode": "f5aa",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-paw": {
+        "unicode": "f1b0",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-peace": {
+        "unicode": "f67c",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-phone": {
+        "unicode": "f095",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-plane": {
+        "unicode": "f072",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-plug": {
+        "unicode": "f1e6",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-redo": {
+        "unicode": "f01e",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-puzzle-piece": {
+        "unicode": "f12e",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-recycle": {
+        "unicode": "f1b8",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-ribbon": {
+        "unicode": "f4d6",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-rss": {
+        "unicode": "f09e",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-save": {
+        "unicode": "f0c7",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-seedling": {
+        "unicode": "f4d8",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-shoe-prints": {
+        "unicode": "f54b",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-shower": {
+        "unicode": "f2cc",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-signature": {
+        "unicode": "f5b7",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-snowflake": {
+        "unicode": "f2dc",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-thermometer-half": {
+        "unicode": "f2c9",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-thumbs-up": {
+        "unicode": "f164",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-thumbtack": {
+        "unicode": "f08d",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-tint": {
+        "unicode": "f043",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-tooth": {
+        "unicode": "f5c9",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-umbrella": {
+        "unicode": "f0e9",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-user": {
+        "unicode": "f007",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-utensils": {
+        "unicode": "f2e7",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-volleyball-ball": {
+        "unicode": "f45f",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-wrench": {
+        "unicode": "f0ad",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-signal": {
+        "unicode": "f012",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-less-than-equal": {
+        "unicode": "f537",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-folder-open": {
+        "unicode": "f07c",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-film": {
+        "unicode": "f008",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-cube": {
+        "unicode": "f1b2",
+        "char": "",
+        "weight": 900
+    },
+    "far fa-bookmark": {
+        "unicode": "f02e",
+        "char": "",
+        "weight": 400
+    },
+    "fas fa-database": {
+        "unicode": "f1c0",
+        "char": "",
+        "weight": 900
+    },
+    "fas fa-archway": {
+        "unicode": "f557",
+        "char": "",
+        "weight": 900
+    }
+}
