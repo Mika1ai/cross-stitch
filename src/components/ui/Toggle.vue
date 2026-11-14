@@ -56,8 +56,10 @@ const model = defineModel<boolean>({ default: false })
     border-color var(--duration-fast) var(--ease-out);
 }
 
-.toggle:hover {
-  border-color: var(--color-text-muted);
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover {
+    border-color: var(--color-text-muted);
+  }
 }
 
 .toggle:focus-visible {

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { SUPPORTED_LOCALES } from '../i18n'
+import { formatSyncDiffMessage } from '../lib/sync-diff-message'
+import { useAuthStore } from '../stores/auth'
 import { useSchemeStore, type SchemeStorePatch } from '../stores/scheme'
 
 const props = withDefaults(
@@ -14,7 +17,10 @@ const props = withDefaults(
 )
 
 const { t } = useI18n()
+const router = useRouter()
+const auth = useAuthStore()
 const schemeStore = useSchemeStore()
+const { user } = storeToRefs(auth)
 const {
   activeCodeColor,
   gridSize,
@@ -35,6 +41,16 @@ const {
 } = storeToRefs(schemeStore)
 
 const showSchemeSettings = computed(() => props.scope === 'all')
+const showSignOut = computed(() => Boolean(user.value))
+
+const signOutOpen = ref(false)
+const signOutBusy = ref(false)
+
+const signOutMessage = computed(() => {
+  const userId = user.value?.id
+  const diffs = userId ? schemeStore.dirtyDiffsForUser(userId) : []
+  return formatSyncDiffMessage(t, diffs, 'sync.signOutAsk')
+})
 
 function patchStore<K extends keyof SchemeStorePatch>(
   key: K,
@@ -57,6 +73,41 @@ watch(gridSizeText, (value) => {
   if (!Number.isFinite(next)) return
   patchStore('gridSize', Math.max(1, Math.round(next)))
 })
+
+function requestSignOut() {
+  const userId = user.value?.id
+  if (userId && schemeStore.userHasUnsavedProgress(userId)) {
+    signOutOpen.value = true
+    return
+  }
+  void doSignOut()
+}
+
+async function doSignOut() {
+  await auth.signOut()
+  await router.replace({ name: 'sign-in' })
+}
+
+async function onSignOutSave() {
+  const userId = user.value?.id
+  if (!userId) return
+  signOutBusy.value = true
+  try {
+    const ok = await schemeStore.flushAllDirtyForUser(userId)
+    if (!ok) return
+    signOutOpen.value = false
+    await doSignOut()
+  } finally {
+    signOutBusy.value = false
+  }
+}
+
+async function onSignOutDiscard() {
+  const userId = user.value?.id
+  if (userId) schemeStore.discardAllDirtyForUser(userId)
+  signOutOpen.value = false
+  await doSignOut()
+}
 </script>
 
 <template>
@@ -97,6 +148,11 @@ watch(gridSizeText, (value) => {
               (value) => patchStore('darkTheme', value)
             "
           />
+        </div>
+        <div v-if="showSignOut" class="settings-sign-out">
+          <UiButton class="ui-btn-block" @click="requestSignOut">
+            {{ t('common.signOut') }}
+          </UiButton>
         </div>
       </section>
 
@@ -314,6 +370,18 @@ watch(gridSizeText, (value) => {
       </UiScrollY>
     </div>
   </UiModal>
+
+  <UiConfirmDialog
+    v-model:open="signOutOpen"
+    :title="t('sync.signOutTitle')"
+    :message="signOutMessage"
+    :confirm-label="t('sync.signOutSave')"
+    :secondary-label="t('sync.signOutDiscard')"
+    :cancel-label="t('sync.signOutCancel')"
+    :busy="signOutBusy"
+    @confirm="onSignOutSave"
+    @secondary="onSignOutDiscard"
+  />
 </template>
 
 <style scoped>
@@ -379,6 +447,10 @@ watch(gridSizeText, (value) => {
 .settings-row__label {
   font-size: var(--text-md);
   color: var(--color-text-muted);
+}
+
+.settings-sign-out {
+  margin-top: var(--space-2);
 }
 
 .settings-reset {

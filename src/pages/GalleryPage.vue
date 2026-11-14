@@ -1,34 +1,23 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { listSchemesWithProgress } from '../lib/schemes-api'
 import { schemePreviewUrl } from '../lib/supabase'
-import { formatSyncDiffMessage } from '../lib/sync-diff-message'
 import { useAuthStore } from '../stores/auth'
-import { useSchemeStore } from '../stores/scheme'
 
 type GalleryItem = Awaited<ReturnType<typeof listSchemesWithProgress>>[number]
 
 const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
-const schemeStore = useSchemeStore()
 const { user } = storeToRefs(auth)
 
 const items = ref<GalleryItem[]>([])
 const loading = ref(true)
 const error = ref('')
 const openingId = ref<string | null>(null)
-const signOutOpen = ref(false)
-const signOutBusy = ref(false)
-
-const signOutMessage = computed(() => {
-  const userId = user.value?.id
-  const diffs = userId ? schemeStore.dirtyDiffsForUser(userId) : []
-  return formatSyncDiffMessage(t, diffs, 'sync.signOutAsk')
-})
 
 watchEffect(() => {
   document.title = `${t('gallery.title')} · ${t('app.title')}`
@@ -53,39 +42,6 @@ async function openScheme(schemeId: string) {
   await router.push({ name: 'scheme', params: { schemeId } })
 }
 
-function requestSignOut() {
-  const userId = user.value?.id
-  if (userId && schemeStore.userHasUnsavedProgress(userId)) {
-    signOutOpen.value = true
-    return
-  }
-  void doSignOut()
-}
-
-async function doSignOut() {
-  await auth.signOut()
-  await router.replace({ name: 'sign-in' })
-}
-
-async function onSignOutSave() {
-  const userId = user.value?.id
-  if (!userId) return
-  signOutBusy.value = true
-  try {
-    const ok = await schemeStore.flushAllDirtyForUser(userId)
-    if (!ok) return
-    signOutOpen.value = false
-    await doSignOut()
-  } finally {
-    signOutBusy.value = false
-  }
-}
-
-async function onSignOutDiscard() {
-  signOutOpen.value = false
-  await doSignOut()
-}
-
 onMounted(() => {
   void load()
 })
@@ -97,12 +53,6 @@ onMounted(() => {
       <h1 class="gallery-page__title">{{ t('gallery.title') }}</h1>
       <div class="gallery-page__actions">
         <SchemeSettings scope="general" />
-        <UiButton
-          :aria-label="t('common.signOut')"
-          @click="requestSignOut"
-        >
-          <IconsLogout />
-        </UiButton>
       </div>
     </header>
 
@@ -140,18 +90,6 @@ onMounted(() => {
         </button>
       </li>
     </ul>
-
-    <UiConfirmDialog
-      v-model:open="signOutOpen"
-      :title="t('sync.signOutTitle')"
-      :message="signOutMessage"
-      :confirm-label="t('sync.signOutSave')"
-      :secondary-label="t('sync.signOutDiscard')"
-      :cancel-label="t('sync.signOutCancel')"
-      :busy="signOutBusy"
-      @confirm="onSignOutSave"
-      @secondary="onSignOutDiscard"
-    />
   </div>
 </template>
 
@@ -209,8 +147,10 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.gallery-card:hover {
-  border-color: var(--color-text-muted);
+@media (hover: hover) and (pointer: fine) {
+  .gallery-card:hover {
+    border-color: var(--color-text-muted);
+  }
 }
 
 .gallery-card:disabled {
@@ -219,11 +159,15 @@ onMounted(() => {
 }
 
 .gallery-card__preview {
+  position: relative;
   aspect-ratio: 1;
+  overflow: hidden;
   background: var(--color-surface-hover);
 }
 
 .gallery-card__image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -231,8 +175,8 @@ onMounted(() => {
 }
 
 .gallery-card__placeholder {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background:
     linear-gradient(
       135deg,

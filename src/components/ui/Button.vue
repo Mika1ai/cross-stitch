@@ -52,7 +52,15 @@ withDefaults(
     background var(--duration-fast) var(--ease-out);
 }
 
-.button:hover {
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background: var(--button-hover-bg, var(--color-surface-hover));
+    border-color: var(--button-accent-color, var(--color-border));
+    color: var(--button-accent-color, var(--color-text));
+  }
+}
+
+.button:active {
   background: var(--button-hover-bg, var(--color-surface-hover));
   border-color: var(--button-accent-color, var(--color-border));
   color: var(--button-accent-color, var(--color-text));

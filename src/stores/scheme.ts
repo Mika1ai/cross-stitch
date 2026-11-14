@@ -632,6 +632,58 @@ export const useSchemeStore = defineStore('scheme', () => {
     return dirtyDiffsForUser(userId).length > 0
   }
 
+  /**
+   * «Не сохранять» на текущей схеме: вернуть lastSynced / syncedBaseline в LS,
+   * dirty=false. На сервер ничего не пушим.
+   */
+  function discardLocalDraft() {
+    const userId = currentUserId.value
+    const schemeId = currentSchemeId.value
+    const baseline = syncedBaseline.value
+    if (!userId || !schemeId || !baseline) return false
+    persistSuspended = true
+    applySnapshot({
+      ...baseline,
+      dirty: false,
+      lastSyncedAt: lastSyncedAt.value,
+      lastSynced: progressContentOf(baseline),
+    })
+    persistSuspended = false
+    writeLocalNow()
+    return true
+  }
+
+  /** Выбросить все dirty-черновики пользователя (leave / sign-out discard). */
+  function discardAllDirtyForUser(userId: string) {
+    if (currentUserId.value === userId && dirty.value) {
+      discardLocalDraft()
+    }
+    for (const entry of listDirtyProgress(userId)) {
+      if (
+        currentUserId.value === userId &&
+        currentSchemeId.value === entry.schemeId
+      ) {
+        continue
+      }
+      const baseline = entry.snapshot.lastSynced
+      if (!baseline) {
+        writeLocalProgress(userId, entry.schemeId, {
+          ...entry.snapshot,
+          dirty: false,
+          lastSynced: progressContentOf(entry.snapshot),
+        })
+        continue
+      }
+      writeLocalProgress(userId, entry.schemeId, {
+        ...baseline,
+        dirty: false,
+        updatedAt: new Date().toISOString(),
+        lastSyncedAt: entry.snapshot.lastSyncedAt,
+        lastSynced: progressContentOf(baseline),
+      })
+    }
+  }
+
   /** Push every dirty local draft for this user (e.g. before sign-out). */
   async function flushAllDirtyForUser(userId: string) {
     if (currentUserId.value === userId && dirty.value) {
@@ -747,6 +799,8 @@ export const useSchemeStore = defineStore('scheme', () => {
     userHasUnsavedProgress,
     dirtyDiffsForUser,
     unsavedDiff,
+    discardLocalDraft,
+    discardAllDirtyForUser,
     flushAllDirtyForUser,
     writeLocalNow,
   }

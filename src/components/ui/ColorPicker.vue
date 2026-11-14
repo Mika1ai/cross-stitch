@@ -167,10 +167,12 @@ onBeforeUnmount(() => {
     background var(--duration-fast) var(--ease-out);
 }
 
-.color-picker__trigger:hover:not(:disabled):not(.color-picker__trigger--flat) {
-  background: var(--color-surface-hover);
-  border-color: var(--color-border);
-  color: var(--color-text);
+@media (hover: hover) and (pointer: fine) {
+  .color-picker__trigger:hover:not(:disabled):not(.color-picker__trigger--flat) {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
 }
 
 .color-picker__trigger:focus-visible {

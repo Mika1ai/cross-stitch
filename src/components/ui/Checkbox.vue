@@ -58,8 +58,10 @@ const model = defineModel<boolean>({ default: false })
   overflow: hidden;
 }
 
-.checkbox:hover {
-  border-color: var(--color-text-muted);
+@media (hover: hover) and (pointer: fine) {
+  .checkbox:hover {
+    border-color: var(--color-text-muted);
+  }
 }
 
 .checkbox:focus-visible {

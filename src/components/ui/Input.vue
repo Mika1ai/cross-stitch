@@ -363,8 +363,10 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.input__clear:hover {
-  color: var(--color-text);
+@media (hover: hover) and (pointer: fine) {
+  .input__clear:hover {
+    color: var(--color-text);
+  }
 }
 
 .input__clear:focus-visible {

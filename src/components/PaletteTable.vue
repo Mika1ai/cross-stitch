@@ -109,57 +109,56 @@ const { activeCode, activeCodeColor, hiddenCodes } = storeToRefs(schemeStore)
   /*
    * Символ / код — по контенту (код не жмём).
    * Активный / исключить — до max-content, при нехватке места сжимаются до контрола.
+   * Без subgrid: на iOS 15 Safari ломает строки в вертикальный столбик.
+   * Без column-gap: иначе sticky-фон и border рвутся «дырами» между колонками.
+   * Горизонтальный ритм — padding ячеек (половина space-4 с каждой стороны).
    */
   grid-template-columns:
     max-content
     minmax(max-content, 1fr)
     minmax(var(--space-5), max-content)
     minmax(var(--space-5), max-content);
-  column-gap: var(--space-4);
   padding-inline: var(--space-4);
   font-size: var(--text-md);
 }
 
-.palette-table tbody {
-  display: contents;
-}
-
-/* thead / tr — полноценные ряды (subgrid), чтобы красить фон и бордер на строку */
 .palette-table thead,
-.palette-table tbody tr {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-}
-
-.palette-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--color-surface);
-  border-bottom: var(--border-width) solid var(--color-border);
-}
-
-.palette-table thead tr {
+.palette-table tbody,
+.palette-table tr {
   display: contents;
-}
-
-.palette-table tbody tr:not(:last-child) {
-  border-bottom: var(--border-width) solid var(--color-border);
 }
 
 .palette-table th,
 .palette-table td {
   display: flex;
   align-items: center;
-  padding: var(--space-3) 0;
+  padding: var(--space-3) calc(var(--space-4) / 2);
   text-align: left;
 }
 
+.palette-table th:first-child,
+.palette-table td:first-child {
+  padding-left: 0;
+}
+
+.palette-table th:last-child,
+.palette-table td:last-child {
+  padding-right: 0;
+}
+
 .palette-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-surface);
   font-weight: var(--font-semibold);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+.palette-table thead th,
+.palette-table tbody tr:not(:last-child) td {
+  border-bottom: var(--border-width) solid var(--color-border);
 }
 
 .palette-table__code {

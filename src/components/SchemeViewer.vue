@@ -1272,6 +1272,7 @@ onBeforeUnmount(() => {
       @pointerup="onPointerUp"
       @pointercancel="onPointerUp"
       @wheel="onWheel"
+      @contextmenu.prevent
     />
 
     <div
@@ -1314,6 +1315,9 @@ onBeforeUnmount(() => {
   touch-action: none;
   border-radius: inherit;
   background: var(--color-surface-hover);
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .scheme-viewer__canvas {
@@ -1322,6 +1326,9 @@ onBeforeUnmount(() => {
   height: 100%;
   touch-action: none;
   cursor: grab;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .scheme-viewer__canvas:active {

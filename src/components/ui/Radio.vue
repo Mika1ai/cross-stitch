@@ -51,8 +51,10 @@ withDefaults(
   background: var(--color-surface);
 }
 
-.radio:hover {
-  border-color: var(--color-text-muted);
+@media (hover: hover) and (pointer: fine) {
+  .radio:hover {
+    border-color: var(--color-text-muted);
+  }
 }
 
 .radio:focus-visible {

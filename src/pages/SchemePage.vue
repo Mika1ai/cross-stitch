@@ -309,6 +309,7 @@ async function onLeaveSave() {
 }
 
 function onLeaveDiscard() {
+  schemeStore.discardLocalDraft()
   leaveOpen.value = false
   void router.push({ name: 'gallery' })
 }
@@ -550,6 +551,8 @@ function onConflictLater() {
 .app-shell__sync-status {
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-md);
+  /* iOS 15: color-mix может не работать — сначала непрозрачный fallback */
+  background: var(--color-surface);
   background: color-mix(in srgb, var(--color-surface) 88%, transparent);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
