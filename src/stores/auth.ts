@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import type { Session, User } from '@supabase/supabase-js'
 import { authCallbackUrl } from '../lib/auth-redirect'
 import { supabase } from '../lib/supabase'
+import { useUserSettingsStore } from './userSettings'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -16,15 +17,23 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = next?.user ?? null
   }
 
+  async function syncUserSettings(next: Session | null) {
+    const settings = useUserSettingsStore()
+    if (next?.user) await settings.loadForUser(next.user.id)
+    else settings.resetToDefaults()
+  }
+
   async function init() {
     if (unsubscribe) return
 
     const { data } = await supabase.auth.getSession()
     applySession(data.session)
+    await syncUserSettings(data.session)
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, next) => {
         applySession(next)
+        void syncUserSettings(next)
       },
     )
     unsubscribe = () => listener.subscription.unsubscribe()

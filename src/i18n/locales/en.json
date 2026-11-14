@@ -29,7 +29,8 @@
     "reset": "Reset settings to defaults",
     "general": {
       "title": "General",
-      "darkTheme": "Dark theme"
+      "darkTheme": "Dark theme",
+      "markDoneOnSingleTap": "Mark done with a single tap"
     },
     "language": {
       "choose": "Choose language: {name}"

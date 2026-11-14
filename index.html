@@ -17,13 +17,11 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
       (() => {
-        const raw = localStorage.getItem('cross-stitch.darkTheme')
-        const dark = raw === 'false' ? false : true
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
-        const themeColor = dark ? '#161514' : '#f7f6f4'
+        /* До загрузки prefs с сервера — дефолт тёмной темы (USER_SETTINGS_DEFAULTS). */
+        document.documentElement.dataset.theme = 'dark'
         document
           .querySelector('meta[name="theme-color"]')
-          ?.setAttribute('content', themeColor)
+          ?.setAttribute('content', '#161514')
       })()
     </script>
   </head>

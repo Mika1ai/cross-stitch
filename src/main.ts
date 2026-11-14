@@ -7,7 +7,7 @@ import App from './App.vue'
 import { i18n } from './i18n'
 import { router } from './router'
 import { useAuthStore } from './stores/auth'
-import { useSchemeStore } from './stores/scheme'
+import { useUserSettingsStore } from './stores/userSettings'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -16,9 +16,10 @@ app.use(pinia)
 app.use(i18n)
 app.use(router)
 
+/* Тема/locale — userSettings; прогреть до mount, чтобы auth-страницы не мигали. */
+useUserSettingsStore(pinia)
+
 const auth = useAuthStore(pinia)
 void auth.init()
-/* Тема/locale живут в scheme store — прогреть сразу, иначе auth-страницы без store остаются на CSS-дефолте. */
-useSchemeStore(pinia)
 
 app.mount('#app')

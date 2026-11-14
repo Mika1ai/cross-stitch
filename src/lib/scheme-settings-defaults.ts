@@ -8,7 +8,6 @@ export type SchemeSettingsDefaults = {
   navigatorSecondaryColor: string
   compassColor: string
   compassSecondaryColor: string
-  darkTheme: boolean
   softenColorsOnZoom: boolean
   veilColor: string
   doneVeilColor: string
@@ -27,7 +26,6 @@ export const SCHEME_SETTINGS_DEFAULTS: SchemeSettingsDefaults = {
   navigatorSecondaryColor: '#f7f6f4ff',
   compassColor: '#884bfdff',
   compassSecondaryColor: '#f7f6f4ff',
-  darkTheme: true,
   softenColorsOnZoom: true,
   veilColor: '#141414bf',
   doneVeilColor: '#141414bf',

@@ -5,6 +5,7 @@ import { tinycolor } from 'vue-color'
 import faIconMap from '../data/fa-icon-map.json'
 import type { SchemePaletteEntry } from '../types/scheme'
 import { useSchemeStore } from '../stores/scheme'
+import { useUserSettingsStore } from '../stores/userSettings'
 import {
   ACCENT_STROKE_CSS_PX,
   ACCENT_STROKE_MIN,
@@ -46,6 +47,8 @@ import type {
 const iconGlyphs = faIconMap as Record<string, FaIconGlyph>
 
 const schemeStore = useSchemeStore()
+const userSettings = useUserSettingsStore()
+const { darkTheme, markDoneOnSingleTap } = storeToRefs(userSettings)
 const {
   done,
   lastDoneIndex,
@@ -64,7 +67,6 @@ const {
   navigatorSecondaryColor,
   compassColor,
   compassSecondaryColor,
-  darkTheme,
   softenColorsOnZoom,
   veilColor,
   doneVeilColor,
@@ -1196,6 +1198,10 @@ function onPointerUp(event: PointerEvent) {
     if (cell) {
       if (showCompass.value) {
         handleCompassTap(cell)
+        lastTapIndex = null
+        lastTapAt = 0
+      } else if (markDoneOnSingleTap.value) {
+        toggleCell(cell.index)
         lastTapIndex = null
         lastTapAt = 0
       } else {

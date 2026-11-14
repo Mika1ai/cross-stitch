@@ -2,13 +2,11 @@ import {
   computed,
   ref,
   shallowRef,
-  watch,
   type Ref,
   type ShallowRef,
 } from 'vue'
 import { defineStore } from 'pinia'
 import type { SchemeData, SchemePaletteEntry } from '../types/scheme'
-import { DEFAULT_LOCALE, i18n, type AppLocale } from '../i18n'
 import {
   SCHEME_SETTINGS_DEFAULTS,
   type SchemeSettingsDefaults,
@@ -45,23 +43,9 @@ export type ProgressConflict = ProgressDiff & {
 
 export type { ProgressDiff }
 
-const LOCALE_KEY = 'cross-stitch.locale'
-const DARK_THEME_KEY = 'cross-stitch.darkTheme'
 const SYNC_INTERVAL_MS = 10 * 60 * 1000
 
-function readStoredLocale(): AppLocale {
-  const raw = localStorage.getItem(LOCALE_KEY)
-  return raw === 'en' || raw === 'ru' ? raw : DEFAULT_LOCALE
-}
-
-function readStoredDarkTheme(): boolean {
-  const raw = localStorage.getItem(DARK_THEME_KEY)
-  if (raw === 'true') return true
-  if (raw === 'false') return false
-  return SCHEME_SETTINGS_DEFAULTS.darkTheme
-}
-
-/** Поля, которые можно патчить через updateStore. */
+/** Поля, которые можно патчить через updateStore (per-scheme; не user-global). */
 export type SchemeStorePatch = {
   done: Set<number>
   lastDoneIndex: number | null
@@ -80,7 +64,6 @@ export type SchemeStorePatch = {
   navigatorSecondaryColor: string
   compassColor: string
   compassSecondaryColor: string
-  darkTheme: boolean
   softenColorsOnZoom: boolean
   veilColor: string
   doneVeilColor: string
@@ -88,7 +71,6 @@ export type SchemeStorePatch = {
   showProgress: boolean
   progressColor: string
   autoProgressOnZoomOut: boolean
-  locale: AppLocale
 }
 
 export const useSchemeStore = defineStore('scheme', () => {
@@ -111,7 +93,6 @@ export const useSchemeStore = defineStore('scheme', () => {
 
   const done = shallowRef(new Set<number>())
   const lastDoneIndex = ref<number | null>(null)
-  const locale = ref<AppLocale>(readStoredLocale())
   const activeCode = ref<string | null>(null)
   const hiddenCodes = shallowRef(new Set<string>())
   const activeCodeColor = ref(SCHEME_SETTINGS_DEFAULTS.activeCodeColor)
@@ -131,7 +112,6 @@ export const useSchemeStore = defineStore('scheme', () => {
   const compassSecondaryColor = ref(
     SCHEME_SETTINGS_DEFAULTS.compassSecondaryColor,
   )
-  const darkTheme = ref(readStoredDarkTheme())
   const softenColorsOnZoom = ref(SCHEME_SETTINGS_DEFAULTS.softenColorsOnZoom)
   const veilColor = ref(SCHEME_SETTINGS_DEFAULTS.veilColor)
   const doneVeilColor = ref(SCHEME_SETTINGS_DEFAULTS.doneVeilColor)
@@ -160,7 +140,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     navigatorSecondaryColor,
     compassColor,
     compassSecondaryColor,
-    darkTheme,
     softenColorsOnZoom,
     veilColor,
     doneVeilColor,
@@ -168,7 +147,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     showProgress,
     progressColor,
     autoProgressOnZoomOut,
-    locale,
   } as const satisfies {
     [K in keyof SchemeStorePatch]:
       | Ref<SchemeStorePatch[K]>
@@ -182,10 +160,7 @@ export const useSchemeStore = defineStore('scheme', () => {
         ;(patchable[key] as { value: unknown }).value = value
       }
     }
-    const shouldPersist = (
-      Object.keys(patch) as (keyof SchemeStorePatch)[]
-    ).some((key) => key !== 'darkTheme' && key !== 'locale')
-    if (shouldPersist) syncDirtyAndPersistLocal()
+    syncDirtyAndPersistLocal()
   }
 
   function threadAt(cellIndex: number): SchemePaletteEntry {
@@ -604,7 +579,7 @@ export const useSchemeStore = defineStore('scheme', () => {
     writeLocalNow()
   }
 
-  /** Сброс per-scheme настроек (не darkTheme / locale). */
+  /** Сброс per-scheme настроек (не user-global locale / theme / markDone). */
   function resetSchemeSettings() {
     const defaults = defaultProgressSettings()
     updateStore({
@@ -725,28 +700,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     return true
   }
 
-  watch(
-    darkTheme,
-    (on) => {
-      document.documentElement.dataset.theme = on ? 'dark' : 'light'
-      document
-        .querySelector('meta[name="theme-color"]')
-        ?.setAttribute('content', on ? '#161514' : '#f7f6f4')
-      localStorage.setItem(DARK_THEME_KEY, String(on))
-    },
-    { immediate: true },
-  )
-
-  watch(
-    locale,
-    (code) => {
-      i18n.global.locale.value = code
-      document.documentElement.lang = code
-      localStorage.setItem(LOCALE_KEY, code)
-    },
-    { immediate: true },
-  )
-
   return {
     currentSchemeId,
     currentUserId,
@@ -762,7 +715,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     lastDoneIndex,
     activeCode,
     hiddenCodes,
-    locale,
     activeCodeColor,
     showBlocks,
     gridSize,
@@ -776,7 +728,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     navigatorSecondaryColor,
     compassColor,
     compassSecondaryColor,
-    darkTheme,
     softenColorsOnZoom,
     veilColor,
     doneVeilColor,

@@ -56,12 +56,13 @@ onMounted(() => {
       </div>
     </header>
 
-    <p v-if="loading" class="ui-status">{{ t('common.loading') }}</p>
+    <div v-if="loading" class="ui-status gallery-page__loading">
+      <UiLoading />
+    </div>
     <p v-else-if="error" class="ui-error" role="alert">{{ error }}</p>
     <p v-else-if="items.length === 0" class="ui-status">
       {{ t('gallery.empty') }}
     </p>
-
     <ul v-else class="gallery-grid">
       <li v-for="item in items" :key="item.id">
         <button
@@ -124,6 +125,14 @@ onMounted(() => {
   gap: var(--space-2);
 }
 
+.gallery-page__loading {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
@@ -159,8 +168,12 @@ onMounted(() => {
 }
 
 .gallery-card__preview {
+  /* iOS 15 / iPhone 7: aspect-ratio + absolute img иногда схлопывается —
+     квадрат через padding-bottom надёжнее на старом WebKit */
   position: relative;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
   overflow: hidden;
   background: var(--color-surface-hover);
 }

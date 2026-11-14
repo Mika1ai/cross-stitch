@@ -7,10 +7,11 @@ import { SUPPORTED_LOCALES } from '../i18n'
 import { formatSyncDiffMessage } from '../lib/sync-diff-message'
 import { useAuthStore } from '../stores/auth'
 import { useSchemeStore, type SchemeStorePatch } from '../stores/scheme'
+import { useUserSettingsStore } from '../stores/userSettings'
 
 const props = withDefaults(
   defineProps<{
-    /** `general` — только язык/тема; `all` — плюс настройки схемы */
+    /** `general` — user-global; `all` — плюс настройки схемы */
     scope?: 'all' | 'general'
   }>(),
   { scope: 'all' },
@@ -20,7 +21,9 @@ const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 const schemeStore = useSchemeStore()
+const userSettings = useUserSettingsStore()
 const { user } = storeToRefs(auth)
+const { locale, darkTheme, markDoneOnSingleTap } = storeToRefs(userSettings)
 const {
   activeCodeColor,
   gridSize,
@@ -30,14 +33,12 @@ const {
   navigatorSecondaryColor,
   compassColor,
   compassSecondaryColor,
-  darkTheme,
   softenColorsOnZoom,
   veilColor,
   doneVeilColor,
   washColor,
   progressColor,
   autoProgressOnZoomOut,
-  locale,
 } = storeToRefs(schemeStore)
 
 const showSchemeSettings = computed(() => props.scope === 'all')
@@ -135,7 +136,7 @@ async function onSignOutDiscard() {
             :aria-label="
               t('settings.language.choose', { name: item.nativeName })
             "
-            @click="patchStore('locale', item.code)"
+            @click="userSettings.patch({ locale: item.code })"
           />
         </div>
         <div class="settings-row">
@@ -145,7 +146,18 @@ async function onSignOutDiscard() {
           <UiToggle
             :model-value="darkTheme"
             @update:model-value="
-              (value) => patchStore('darkTheme', value)
+              (value) => userSettings.patch({ darkTheme: value })
+            "
+          />
+        </div>
+        <div class="settings-row">
+          <span class="settings-row__label">{{
+            t('settings.general.markDoneOnSingleTap')
+          }}</span>
+          <UiToggle
+            :model-value="markDoneOnSingleTap"
+            @update:model-value="
+              (value) => userSettings.patch({ markDoneOnSingleTap: value })
             "
           />
         </div>

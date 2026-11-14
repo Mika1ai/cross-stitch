@@ -1,6 +1,14 @@
+import type { AppLocale } from '../i18n'
 import type { SchemePaletteEntry } from './scheme'
 
 export type SchemeCellPos = { x: number; y: number }
+
+/** App-global prefs in user_settings.prefs (one row per user). */
+export type UserSettingsPrefs = {
+  locale: AppLocale
+  darkTheme: boolean
+  markDoneOnSingleTap: boolean
+}
 
 /** Per-scheme UI + work state stored in user_progress.settings */
 export type UserProgressSettings = {
@@ -26,6 +34,12 @@ export type UserProgressSettings = {
   showProgress: boolean
   compassFrom: SchemeCellPos | null
   compassTo: SchemeCellPos | null
+}
+
+export type UserSettingsRow = {
+  user_id: string
+  prefs: UserSettingsPrefs
+  updated_at: string
 }
 
 export type SchemeRow = {

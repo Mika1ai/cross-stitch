@@ -8,7 +8,7 @@ export const ACCENT_STROKE_MIN = 0.35
 /** Крестики «готово» (и жест mark) только при cellPx >= этом. Ниже — ничего. */
 export const DONE_MARK_MIN_CELL_PX = 12
 /** При макс. зуме одна клетка схемы занимает столько CSS-пикселей */
-export const MAX_CELL_PX = 100
+export const MAX_CELL_PX = 60
 /**
  * При мин. зуме вдоль «упорной» оси карточки влезает столько схем.
  * Упорная ось = min(cardW/schemeW, cardH/schemeH).

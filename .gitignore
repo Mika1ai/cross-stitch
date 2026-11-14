@@ -15,11 +15,6 @@ dist-ssr
 .env.*
 !.env.example
 
-# Local notes (README + PROJECT stay tracked)
-*.md
-!README.md
-!PROJECT.md
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -197,8 +197,16 @@ const paletteWithProgress = computed(() =>
 
 const filteredPaletteRows = computed(() => {
   const query = codeQuery.value.trim()
-  if (!query) return paletteWithProgress.value
-  return paletteWithProgress.value.filter((row) => row.code.includes(query))
+  const rows = !query
+    ? [...paletteWithProgress.value]
+    : paletteWithProgress.value.filter((row) => row.code.includes(query))
+  const active = activeCode.value
+  if (!active) return rows
+  const idx = rows.findIndex((row) => row.code === active)
+  if (idx <= 0) return rows
+  const [row] = rows.splice(idx, 1)
+  rows.unshift(row!)
+  return rows
 })
 
 const overallProgress = computed(() => {
@@ -346,9 +354,9 @@ function onConflictLater() {
       @pointermove="onCardPointerMove"
       @wheel="onCardWheel"
     >
-      <p v-if="loadingScheme" class="ui-status app-card__message">
-        {{ t('common.loading') }}
-      </p>
+      <div v-if="loadingScheme" class="ui-status app-card__message">
+        <UiLoading />
+      </div>
       <p v-else-if="bootError" class="ui-error app-card__message" role="alert">
         {{ bootError }}
       </p>
@@ -359,6 +367,7 @@ function onConflictLater() {
         :data-hidden="chromeVisible ? undefined : 'true'"
         @pointerenter="onChromePointerEnter"
         @pointerleave="onChromePointerLeave"
+        @contextmenu.prevent
       >
         <div ref="topRef" class="app-shell__top">
           <div
@@ -574,8 +583,13 @@ function onConflictLater() {
 }
 
 .app-card__message {
-  margin: var(--space-4);
-  padding-top: calc(var(--control-height) + var(--space-4));
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 .palette-toolbar {

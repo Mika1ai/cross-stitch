@@ -9,6 +9,18 @@ body {
   line-height: var(--leading-normal);
   color: var(--color-text);
   background: var(--color-bg);
+  /* PWA / UI: без системного long-press (Lookup, копирование) и выделения текста */
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  -webkit-touch-callout: default;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 #app {

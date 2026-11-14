@@ -25,7 +25,9 @@ function onPageTransitionEnd() {
     class="app-root"
     :data-page-transition="pageTransitioning ? '' : undefined"
   >
-    <div v-if="!ready" class="app-boot" aria-busy="true" />
+    <div v-if="!ready" class="app-boot" aria-busy="true">
+      <UiLoading />
+    </div>
     <RouterView v-else v-slot="{ Component, route }">
       <Transition
         name="page"
@@ -51,6 +53,9 @@ function onPageTransitionEnd() {
 }
 
 .app-boot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100svh;
   background: var(--color-bg);
 }

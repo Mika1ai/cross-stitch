@@ -29,7 +29,8 @@
     "reset": "Сбросить настройки по умолчанию",
     "general": {
       "title": "Общее",
-      "darkTheme": "Тёмная тема"
+      "darkTheme": "Тёмная тема",
+      "markDoneOnSingleTap": "Отмечать одним нажатием"
     },
     "language": {
       "choose": "Выбрать язык: {name}"

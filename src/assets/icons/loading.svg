@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+  <!--
+    Два крестика: один keyframe, второй со сдвигом на половину цикла.
+    Геометрия как public/favicon.svg (40×40, толщина ≈ 4.35).
+  -->
+  <g class="loading-cross loading-cross--1">
+    <path
+      class="loading-arm loading-arm--a"
+      d="M9.5 9.5L30.5 30.5"
+      stroke="currentColor"
+      stroke-width="4.35"
+      stroke-linecap="round"
+    />
+    <path
+      class="loading-arm loading-arm--b"
+      d="M30.5 9.5L9.5 30.5"
+      stroke="currentColor"
+      stroke-width="4.35"
+      stroke-linecap="round"
+    />
+  </g>
+  <g class="loading-cross loading-cross--2">
+    <path
+      class="loading-arm loading-arm--a"
+      d="M9.5 9.5L30.5 30.5"
+      stroke="currentColor"
+      stroke-width="4.35"
+      stroke-linecap="round"
+    />
+    <path
+      class="loading-arm loading-arm--b"
+      d="M30.5 9.5L9.5 30.5"
+      stroke="currentColor"
+      stroke-width="4.35"
+      stroke-linecap="round"
+    />
+  </g>
+</svg>
