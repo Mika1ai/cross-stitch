@@ -16,14 +16,24 @@ const pending = ref(false)
 
 /** Подсказка Chrome/Edge сохранить логин после SPA-submit. */
 async function offerStoreCredentials(userEmail: string, userPassword: string) {
-  if (!('PasswordCredential' in window) || !navigator.credentials?.store) return
+  const PasswordCred = (
+    window as Window & {
+      PasswordCredential?: new (data: {
+        id: string
+        name?: string
+        password: string
+      }) => Credential
+    }
+  ).PasswordCredential
+  if (!PasswordCred || !navigator.credentials?.store) return
   try {
-    const cred = new PasswordCredential({
-      id: userEmail,
-      name: userEmail,
-      password: userPassword,
-    })
-    await navigator.credentials.store(cred)
+    await navigator.credentials.store(
+      new PasswordCred({
+        id: userEmail,
+        name: userEmail,
+        password: userPassword,
+      }),
+    )
   } catch {
     // Браузер мог отказать — обычный save-prompt по форме всё ещё возможен.
   }
