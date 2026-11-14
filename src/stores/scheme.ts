@@ -7,6 +7,7 @@ import {
 } from 'vue'
 import { defineStore } from 'pinia'
 import type { SchemeData, SchemePaletteEntry } from '../types/scheme'
+import { NAVIGATOR_ENABLED } from '../lib/feature-flags'
 import {
   SCHEME_SETTINGS_DEFAULTS,
   type SchemeSettingsDefaults,
@@ -70,7 +71,6 @@ export type SchemeStorePatch = {
   washColor: string
   showProgress: boolean
   progressColor: string
-  autoProgressOnZoomOut: boolean
 }
 
 export const useSchemeStore = defineStore('scheme', () => {
@@ -118,9 +118,6 @@ export const useSchemeStore = defineStore('scheme', () => {
   const washColor = ref(SCHEME_SETTINGS_DEFAULTS.washColor)
   const showProgress = ref(false)
   const progressColor = ref(SCHEME_SETTINGS_DEFAULTS.progressColor)
-  const autoProgressOnZoomOut = ref(
-    SCHEME_SETTINGS_DEFAULTS.autoProgressOnZoomOut,
-  )
 
   const patchable = {
     done,
@@ -146,7 +143,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     washColor,
     showProgress,
     progressColor,
-    autoProgressOnZoomOut,
   } as const satisfies {
     [K in keyof SchemeStorePatch]:
       | Ref<SchemeStorePatch[K]>
@@ -245,11 +241,10 @@ export const useSchemeStore = defineStore('scheme', () => {
     doneVeilColor.value = settings.doneVeilColor
     washColor.value = settings.washColor
     progressColor.value = settings.progressColor
-    autoProgressOnZoomOut.value = settings.autoProgressOnZoomOut
     activeCode.value = settings.activeCode
     hiddenCodes.value = new Set(settings.hiddenCodes)
     showBlocks.value = settings.showBlocks
-    showNavigator.value = settings.showNavigator
+    showNavigator.value = NAVIGATOR_ENABLED && settings.showNavigator
     showCompass.value = settings.showCompass
     showProgress.value = settings.showProgress
     compassFrom.value = settings.compassFrom
@@ -275,11 +270,10 @@ export const useSchemeStore = defineStore('scheme', () => {
       doneVeilColor: doneVeilColor.value,
       washColor: washColor.value,
       progressColor: progressColor.value,
-      autoProgressOnZoomOut: autoProgressOnZoomOut.value,
       activeCode: activeCode.value,
       hiddenCodes: [...hiddenCodes.value],
       showBlocks: showBlocks.value,
-      showNavigator: showNavigator.value,
+      showNavigator: NAVIGATOR_ENABLED && showNavigator.value,
       showCompass: showCompass.value,
       showProgress: showProgress.value,
       compassFrom: compassFrom.value
@@ -596,7 +590,6 @@ export const useSchemeStore = defineStore('scheme', () => {
       doneVeilColor: defaults.doneVeilColor,
       washColor: defaults.washColor,
       progressColor: defaults.progressColor,
-      autoProgressOnZoomOut: defaults.autoProgressOnZoomOut,
     })
   }
 
@@ -734,7 +727,6 @@ export const useSchemeStore = defineStore('scheme', () => {
     washColor,
     showProgress,
     progressColor,
-    autoProgressOnZoomOut,
     activeColor,
     doneCountByColor,
     updateStore,

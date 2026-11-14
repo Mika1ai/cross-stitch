@@ -25,12 +25,12 @@ export type UserProgressSettings = {
   doneVeilColor: string
   washColor: string
   progressColor: string
-  autoProgressOnZoomOut: boolean
   activeCode: string | null
   hiddenCodes: string[]
   showBlocks: boolean
   showNavigator: boolean
   showCompass: boolean
+  /** Режим прогресса: bake при zoom out (< 12px); на крупном зуме — обычный вид. */
   showProgress: boolean
   compassFrom: SchemeCellPos | null
   compassTo: SchemeCellPos | null

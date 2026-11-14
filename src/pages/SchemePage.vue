@@ -12,6 +12,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { PaletteRow } from '../components/PaletteTable.vue'
+import { NAVIGATOR_ENABLED } from '../lib/feature-flags'
 import { hasOpenModal } from '../lib/modal-open'
 import { formatSyncDiffMessage } from '../lib/sync-diff-message'
 import { useAuthStore } from '../stores/auth'
@@ -415,6 +416,7 @@ function onConflictLater() {
             </UiButton>
 
             <UiButton
+              v-if="NAVIGATOR_ENABLED"
               :aria-label="t('toolbar.navigator')"
               :aria-pressed="showNavigator"
               :color="navigatorColor"

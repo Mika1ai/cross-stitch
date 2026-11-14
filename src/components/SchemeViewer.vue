@@ -73,7 +73,6 @@ const {
   washColor,
   showProgress,
   progressColor,
-  autoProgressOnZoomOut,
 } = storeToRefs(schemeStore)
 
 const schemeTemplate = schemeStore.template
@@ -194,9 +193,15 @@ watch(showCompass, () => {
   scheduleDraw()
 })
 
-/** Режим прогресса / смена цвета — пересобрать bitmap; done — только если режим вкл. */
+/** Режим вкл. + zoom out → bake; preference showProgress персистится, bake — нет. */
+const progressActive = computed(
+  () =>
+    showProgress.value && BASE_CELL * scale.value < DONE_MARK_MIN_CELL_PX,
+)
+
+/** Эффективный bake / цвет — пересобрать bitmap. */
 watch(
-  () => [showProgress.value, progressColor.value] as const,
+  () => [progressActive.value, progressColor.value] as const,
   () => {
     if (!colorCanvas) return
     colorCanvas = buildColorCanvas()
@@ -205,45 +210,16 @@ watch(
 )
 
 watch(done, () => {
-  if (!showProgress.value || !colorCanvas) return
+  if (!progressActive.value || !colorCanvas) return
   colorCanvas = buildColorCanvas()
 })
 
 /** Скрытый: крестики/progress-bake не показываем как done; Set не чистим. */
 watch(hiddenCodes, () => {
-  if (showProgress.value && colorCanvas) {
+  if (progressActive.value && colorCanvas) {
     colorCanvas = buildColorCanvas()
   }
   scheduleDraw()
-})
-
-/**
- * Авто-прогресс только на пересечении порога крестиков (и один раз на маунте).
- * Зум внутри зоны ниже/выше порога не трогает ручной выкл/вкл.
- */
-watch(
-  () => BASE_CELL * scale.value,
-  (cellPx, prevCellPx) => {
-    if (!autoProgressOnZoomOut.value) return
-    const th = DONE_MARK_MIN_CELL_PX
-    if (prevCellPx == null) {
-      schemeStore.updateStore({ showProgress: cellPx < th })
-      return
-    }
-    if (prevCellPx >= th && cellPx < th) {
-      schemeStore.updateStore({ showProgress: true })
-    } else if (prevCellPx < th && cellPx >= th) {
-      schemeStore.updateStore({ showProgress: false })
-    }
-  },
-  { immediate: true },
-)
-
-watch(autoProgressOnZoomOut, (on) => {
-  if (!on) return
-  schemeStore.updateStore({
-    showProgress: BASE_CELL * scale.value < DONE_MARK_MIN_CELL_PX,
-  })
 })
 
 function handleCompassTap(cell: { x: number; y: number }) {
@@ -715,7 +691,7 @@ function buildColorCanvas() {
     palette,
     done: done.value,
     hiddenCodes: hiddenCodes.value,
-    showProgress: showProgress.value,
+    showProgress: progressActive.value,
     progressColor: progressColor.value,
   })
 }
@@ -972,7 +948,7 @@ function draw() {
   }
 
   // После символа: затемнение + крест; скрытый код / прогресс / ниже LOD — не рисуем.
-  if (!showProgress.value && showMarks && done.value.size) {
+  if (!progressActive.value && showMarks && done.value.size) {
     const visible = visibleCellRange(cssW, cssH)
     const hidden = hiddenCodes.value
     for (let y = visible.y0; y <= visible.y1; y++) {

@@ -182,9 +182,9 @@ create policy "user_settings_update_own" on public.user_settings
 | --- | --- |
 | Палитра | Модалка с таблицей; `aria-pressed` + цвет `activeCodeColor`, если выбран код |
 | Сетка | Toggle `showBlocks` (стор, default выкл.); цвет `gridColor` |
-| Навигатор | Toggle `showNavigator` (стор); цвет `navigatorColor` |
+| Навигатор | **Скрыт из UI** до реворка (`NAVIGATOR_ENABLED = false`); код и поля settings сохранены |
 | Компас | Toggle `showCompass` (стор); цвет `compassColor` |
-| Прогресс | Toggle `showProgress`: done в `colorCanvas` → `progressColor`; вуаль/крест скрыты. Опция `autoProgressOnZoomOut` — вкл. ниже порога крестиков (12), выкл. выше |
+| Прогресс | Toggle `showProgress` (персистится): при zoom out (< 12) done → `progressColor` в `colorCanvas`, крестики скрыты; на крупном зуме — обычный вид. Без отдельного auto-флага |
 
 `UiButton`: prop `color` задаёт акцент; виден при **hover** (только иконка/бордер) и при **`aria-pressed`** (ещё и фон `surface-hover`).
 
@@ -259,7 +259,9 @@ create policy "user_settings_update_own" on public.user_settings
 - При активном навигаторе (есть маршрут) или компасе (есть from/to): полупрозрачный `veilColor` на весь viewport.
 - Focus-клетки **не** вырезаются и не перерисовываются — остаются под veil; поверх — только рамки и маршруты.
 
-### Навигатор
+### Навигатор (скрыт, ждёт реворка)
+
+UI кнопки и настроек выключен флагом `NAVIGATOR_ENABLED` в `src/lib/feature-flags.ts`. Логика в `SchemeViewer` / сторе пока на месте.
 
 - От `lastDoneIndex` — ближайшая несделанная того же цвета; Г-путь (сначала вертикаль, потом горизонталь), подписи, стрелка на цели.
 - Цвета: `navigatorColor` / `navigatorSecondaryColor`.
@@ -296,7 +298,7 @@ create policy "user_settings_update_own" on public.user_settings
 | `cellPx` | Что происходит |
 | --- | --- |
 | **min** (`fit / 1.25`) | Нижняя граница зума: вдоль упорной оси влезает ~1.25 схемы |
-| ниже **12** | Нет крестиков «готово», жест mark выкл.; wash нет. При `autoProgressOnZoomOut` — progress включается при переходе ниже 12 |
+| ниже **12** | Нет крестиков «готово», жест mark выкл.; wash нет. Если `showProgress` — bake прогресса (done → `progressColor`) |
 | **12** (`DONE_MARK_MIN_CELL_PX`) | Появляются крестики + вуаль done; double-tap mark; **старт** zoom-wash (alpha → 0) |
 | **12…60** | Wash нарастает линейно: `t = (scale - 1.5) / (maxScale - 1.5)` |
 | от **24** | Мелкая сетка клеток (`cellDivider`) + символы/иконки |
@@ -327,9 +329,10 @@ Prop `scope`: `all` (схема) | `general` (галерея и др. вне с�
 
 **Сетка** — размер блока + `gridColor` (alpha)
 
-**Навигатор / Компас** — основной цвет с alpha; вторичный (плашки) — без alpha
+**Навигатор** — скрыт до реворка; поля цветов в settings остаются.  
+**Компас** — основной цвет с alpha; вторичный (плашки) — без alpha
 
-**Прогресс** — авто на zoom out (`autoProgressOnZoomOut`); `progressColor` (alpha)
+**Прогресс** — `progressColor` (alpha); сам режим — кнопка тулбара (`showProgress`)
 
 Внизу: **Сбросить по умолчанию** → `resetSettings()` (только поля настроек; done / моды / точки компаса не трогает).
 
@@ -353,8 +356,7 @@ Prop `scope`: `all` (схема) | `general` (галерея и др. вне с�
 | `veilColor` | Focus-veil |
 | `doneVeilColor` | Затемнение готовой клетки |
 | `showBlocks` / `showNavigator` / `showCompass` | Моды тулбара (сетка / навигатор / компас) |
-| `showProgress` / `progressColor` | Режим прогресса + цвет done |
-| `autoProgressOnZoomOut` | Авто вкл/выкл прогресса на пороге крестиков (default выкл.) |
+| `showProgress` / `progressColor` | Режим прогресса (bake на zoom out) + цвет done |
 | `doneCountByColor` | Прогресс в палитре |
 
 Стор `userSettings`: `locale`, `darkTheme`, `markDoneOnSingleTap` — см. раздел данных выше.
@@ -375,9 +377,11 @@ Prop `scope`: `all` (схема) | `general` (галерея и др. вне с�
 - **Нет автотестов** — особенно жалко `progress-local`, conflict / discard / flush.
 - **`fa-icon-map.json`** — временный FA-lookup на canvas; уйдёт при переработке символов схем (см. правила выше).
 - **Perf на слабых устройствах** — ink-кэш (A) уже есть; при необходимости дальше: реже перерисовывать символы / отдельный слой (B), атлас глифов вместо `fillText` (C). Целевой контекст: iPhone 7 и pan/zoom при `cellPx >= 24`.
+- **Навигатор — реворк** — сейчас скрыт (`NAVIGATOR_ENABLED = false` в `src/lib/feature-flags.ts`): нет кнопки на тулбаре и секции в настройках; код маршрута/цветов не удалён. Вернуть UI после переработки UX (сейчас считается сырым).
 
 ### Опциональный порядок (value / risk)
 
-1. Точечные unit-тесты на sync/discard/conflict.
-2. Нарезка draw/pointer из `SchemeViewer`.
-3. Разделение UI vs sync в сторе `scheme`.
+1. Реворк навигатора → снова включить `NAVIGATOR_ENABLED`.
+2. Точечные unit-тесты на sync/discard/conflict.
+3. Нарезка draw/pointer из `SchemeViewer`.
+4. Разделение UI vs sync в сторе `scheme`.

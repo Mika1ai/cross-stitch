@@ -13,7 +13,6 @@ export type SchemeSettingsDefaults = {
   doneVeilColor: string
   washColor: string
   progressColor: string
-  autoProgressOnZoomOut: boolean
 }
 
 export const SCHEME_SETTINGS_DEFAULTS: SchemeSettingsDefaults = {
@@ -31,5 +30,4 @@ export const SCHEME_SETTINGS_DEFAULTS: SchemeSettingsDefaults = {
   doneVeilColor: '#141414bf',
   washColor: '#141414bf',
   progressColor: '#0b8f89ff',
-  autoProgressOnZoomOut: false,
 }

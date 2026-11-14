@@ -24,7 +24,6 @@ export function defaultProgressSettings(): UserProgressSettings {
     doneVeilColor: SCHEME_SETTINGS_DEFAULTS.doneVeilColor,
     washColor: SCHEME_SETTINGS_DEFAULTS.washColor,
     progressColor: SCHEME_SETTINGS_DEFAULTS.progressColor,
-    autoProgressOnZoomOut: SCHEME_SETTINGS_DEFAULTS.autoProgressOnZoomOut,
     activeCode: null,
     hiddenCodes: [],
     showBlocks: false,
@@ -52,6 +51,10 @@ export function mergeProgressSettings(
       typeof input.activeCode === 'string' || input.activeCode === null
         ? input.activeCode
         : base.activeCode,
+    showProgress:
+      typeof input.showProgress === 'boolean'
+        ? input.showProgress
+        : base.showProgress,
     compassFrom: mergeCellPos(input.compassFrom),
     compassTo: mergeCellPos(input.compassTo),
   }

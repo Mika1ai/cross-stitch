@@ -64,7 +64,6 @@
     },
     "progress": {
       "title": "Progress",
-      "autoOnZoomOut": "Turn on when zoomed out",
       "color": "Done color in progress view"
     }
   },

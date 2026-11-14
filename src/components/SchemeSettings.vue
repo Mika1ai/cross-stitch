@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { SUPPORTED_LOCALES } from '../i18n'
+import { NAVIGATOR_ENABLED } from '../lib/feature-flags'
 import { formatSyncDiffMessage } from '../lib/sync-diff-message'
 import { useAuthStore } from '../stores/auth'
 import { useSchemeStore, type SchemeStorePatch } from '../stores/scheme'
@@ -38,7 +39,6 @@ const {
   doneVeilColor,
   washColor,
   progressColor,
-  autoProgressOnZoomOut,
 } = storeToRefs(schemeStore)
 
 const showSchemeSettings = computed(() => props.scope === 'all')
@@ -280,7 +280,11 @@ async function onSignOutDiscard() {
           </div>
         </section>
 
-        <section class="settings-card" aria-labelledby="settings-navigator">
+        <section
+          v-if="NAVIGATOR_ENABLED"
+          class="settings-card"
+          aria-labelledby="settings-navigator"
+        >
           <h3 id="settings-navigator" class="settings-card__title">
             {{ t('settings.navigator.title') }}
           </h3>
@@ -344,18 +348,6 @@ async function onSignOutDiscard() {
           <h3 id="settings-progress" class="settings-card__title">
             {{ t('settings.progress.title') }}
           </h3>
-          <div class="settings-row">
-            <span class="settings-row__label">{{
-              t('settings.progress.autoOnZoomOut')
-            }}</span>
-            <UiToggle
-              :model-value="autoProgressOnZoomOut"
-              @update:model-value="
-                (value) =>
-                  patchStore('autoProgressOnZoomOut', value)
-              "
-            />
-          </div>
           <div class="settings-row">
             <span class="settings-row__label">{{
               t('settings.progress.color')
