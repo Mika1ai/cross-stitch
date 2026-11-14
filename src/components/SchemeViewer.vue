@@ -947,8 +947,8 @@ function draw() {
     }
   }
 
-  // После символа: затемнение + крест; скрытый код / прогресс / ниже LOD — не рисуем.
-  if (!progressActive.value && showMarks && done.value.size) {
+  // После символа: затемнение + крест; ниже LOD (и при bake прогресса на мелком зуме) — не рисуем.
+  if (showMarks && done.value.size) {
     const visible = visibleCellRange(cssW, cssH)
     const hidden = hiddenCodes.value
     for (let y = visible.y0; y <= visible.y1; y++) {
