@@ -1,5 +1,5 @@
 import { tinycolor } from 'vue-color'
-import type { SchemePaletteEntry } from '../../data/scheme'
+import type { SchemePaletteEntry } from '../../types/scheme'
 import { BASE_CELL, DONE_MARK_MIN_CELL_PX, FRAME_TINT_ALPHA } from './constants'
 
 export function parseHexRgb(hex: string) {

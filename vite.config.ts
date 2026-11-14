@@ -3,8 +3,9 @@ import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import svgLoader from 'vite-svg-loader'
 
-// https://vite.dev/config/
+// Local: base `/`. GitHub Pages project site: VITE_BASE=/cross-stitch/
 export default defineConfig({
+  base: process.env.VITE_BASE || '/',
   plugins: [
     vue(),
     Components({

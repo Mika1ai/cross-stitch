@@ -1,6 +1,7 @@
 @import './variables.css';
 @import './fonts.css';
 @import './reset.css';
+@import './auth.css';
 
 body {
   font-family: var(--font-sans);
@@ -37,5 +38,24 @@ body {
 
 *::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* Shared page / chrome utilities */
+.ui-btn-block {
+  width: 100%;
+  min-height: calc(var(--control-height) + var(--space-2));
+  padding-inline: var(--space-4);
+  font-size: var(--text-md);
+  font-weight: var(--font-medium);
+}
+
+.ui-status {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.ui-error {
+  margin: 0;
+  color: var(--color-danger);
 }
 

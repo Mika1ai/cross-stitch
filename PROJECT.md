@@ -10,7 +10,7 @@
 ## Правила работы
 
 1. Проект — помощник для вышивки крестиком.
-2. Стек: Vue 3 + TypeScript + Vite + pnpm; состояние — Pinia.
+2. Стек: Vue 3 + TypeScript + Vite + pnpm; состояние — Pinia; роутер — `vue-router`; бэкенд — Supabase (Auth + Postgres + Storage).
 3. UI-примитивы — свои в `src/components/ui/` (без внешней UI-библиотеки).
 4. Стили:
    - `src/styles/variables.css` — дизайн-токены (`--border-width`, `--control-height`, `--opacity-ghost`, `--color-checker-*`, `--shadow-*`; цвета UI в hex; dark overrides)
@@ -23,10 +23,10 @@
    - скролл в модалках: `UiScrollY` — нативный бар скрыт (ширина 0), поверх контента тонкий thumb только во время скролла
 5. Автоимпорт (`unplugin-vue-components`, `directoryAsNamespace`): `ui/Button.vue` → `<UiButton>`, `icons/palette.svg` → `<IconsPalette>` (vite-svg-loader, `fill="currentColor"`).
 5a. `UiColorPicker` (vue-color ChromePicker): токены `--vc-*` на панели мапятся на наши `--color-*`; шрифт/радиусы/бордеры через `:deep`.
-6. Данные схемы — `src/data/` (`scheme.json` + `scheme.ts`, `fa-icon-map.json`).
-7. UI-иконки — `src/assets/icons/`; шрифты — `src/assets/fonts/` (Roboto).
-8. i18n: `vue-i18n`, локали `src/i18n/locales/{ru,en}.json`, язык в сторе `locale` (default `ru`), выбор в настройках.
-9. Без демо-контента Vite и лишних зависимостей «на всякий случай».
+6. Каталог схем и прогресс — Supabase (`schemes`, `user_progress`). Пайплайн: **картинка → схема** (palette/cells); рантайм читает схему с сервера.
+7. UI-иконки — `src/assets/icons/`; шрифты — `src/assets/fonts/` (Roboto). Глифы FA на canvas — `src/data/fa-icon-map.json` (локально, не в Supabase): lookup `fas/far …` → unicode. **Временное** решение до переработки логики символов схем — не серебряная пуля, файл потом, скорее всего, уберём.
+8. i18n: `vue-i18n`, локали `src/i18n/locales/{ru,en}.json`; `locale` и `darkTheme` — app-global (localStorage).
+9. Секреты: `.env` из `.env.example` (`VITE_SUPABASE_*`).
 10. Этот файл держим в актуальном состоянии; perf — в PERFORMANCE.md.
 
 ---
@@ -35,24 +35,80 @@
 
 | Путь | Назначение |
 | --- | --- |
-| `src/App.vue` | Шелл: тулбар, палитра, настройки, `SchemeViewer` |
-| `src/components/SchemeViewer.vue` | Canvas схемы, жесты, LOD, отрисовка |
-| `src/components/scheme-viewer/` | Чистые модули вьюера: `constants`, `types`, `routes`, `color`, `geometry` |
-| `src/components/PaletteTable.vue` | Таблица палитры в модалке |
-| `src/components/SchemeSettings.vue` | Модалка настроек (`patchStore` → `updateStore`) |
-| `src/components/ui/*` | Button, Modal, Input, Radio, Checkbox, Toggle, ColorPicker, ScrollY |
-| `src/stores/scheme.ts` | Pinia: `updateStore`, done, activeCode, hiddenCodes, цвета, wash/veil, locale |
-| `src/i18n/` | `vue-i18n`, локали `locales/{ru,en}.json` |
-| `src/data/scheme.json` | Схема 165×235 |
-| `src/data/scheme.ts` | Типы, `threadAt`, `coordsAt` |
+| `src/App.vue` | `<RouterView />` + boot |
+| `src/router/` | Маршруты и auth-guards |
+| `src/pages/` | Auth, галерея, страница схемы |
+| `src/components/SchemeViewer.vue` | Canvas схемы, жесты, LOD |
+| `src/components/scheme-viewer/` | `constants`, `types`, `routes`, `color`, `geometry` |
+| `src/stores/auth.ts` | Сессия Supabase |
+| `src/stores/scheme.ts` | Текущий шаблон + done/settings; LS-first sync → `user_progress` |
+| `src/lib/progress-local.ts` | Ключи/fingerprint/dirty localStorage для прогресса |
+| `src/lib/supabase.ts` | Клиент + URL превью |
+| `src/types/scheme.ts` | Типы шаблона схемы (`SchemeData` / `SchemePaletteEntry`) |
+| `src/types/database.ts` | Типы строк Supabase / `user_progress.settings` |
+| `src/data/fa-icon-map.json` | Временный FA-lookup для canvas; уйдёт при переработке символов схем |
 
-Зависимости UI/цвета: `vue-color` (ChromePicker в `UiColorPicker`), `@fortawesome/fontawesome-free@5` (глифы символов на схеме и в палитре).
+Зависимости: `@supabase/supabase-js`, `vue-router`, `vue-color`, `@fortawesome/fontawesome-free@5`.
+
+---
+
+## Auth и роуты
+
+Гость → `/sign-in`. После входа → `/gallery`. Сборка → `/schemes/:schemeId`.
+
+| Путь | Доступ |
+| --- | --- |
+| `/sign-in`, `/sign-up`, `/forgot-password`, `/confirm-email` | гости |
+| `/reset-password`, `/auth/callback` | callback / recovery |
+| `/gallery`, `/schemes/:id` | authenticated |
+
+Email+password, confirm email ON. Redirect URL: `/auth/callback`.
+
+---
+
+## Данные (Supabase)
+
+- **`schemes`**: slug, title, `preview_path` (исходная пиксельная картинка + превью галереи), width/height, palette, cells. Bucket `scheme-previews` (public read).
+- **`user_progress`**: `(user_id, scheme_id)` unique — `done[]`, `settings` (цвета/тулбар/hiddenCodes…), `last_done_index`. Lazy upsert при открытии схемы.
+- Шаблон **не** копируется на пользователя. `locale` / `darkTheme` не в progress.
+- **Image-first (будущее):** новые схемы — от картинки к `palette`/`cells`. Превью галереи — в Storage (`scheme-previews`); генерации превью в продукте нет.
+
+### Sync прогресса (localStorage-first)
+
+Черновик всегда на устройстве; сервер — редкий бэкап между сессиями/устройствами (лимиты free-tier).
+
+| Правило | Поведение |
+| --- | --- |
+| Ключ LS | `cross-stitch.progress.{userId}.{schemeId}` — аккаунты на одном ПК не смешиваются |
+| Правка progress | сразу в LS + флаг `dirty` (done, settings, lastDoneIndex, тулбар…) |
+| Авто на сервер | каждые **10 мин**, только если `dirty` |
+| Ручное | отдельной кнопки нет; save через confirm (уход / конфликт / sign out). Статус справа снизу: «Сохранено…» / «Есть несохранённые…» / «Сохранение…» |
+| Конфликт при открытии | local ≠ server → модалка: оставить устройство (push) / взять сервер / решить позже |
+| Уход в галерею | если `dirty` → confirm: сохранить / не сохранять / отмена |
+| Sign out | если есть dirty-черновики пользователя → confirm + опциональный flush всех dirty |
+| Вкладка | `visibilitychange` (hidden) → LS + попытка save; `beforeunload` если dirty |
+| Cookies | не используем для прогресса |
+
+Код: `src/lib/progress-local.ts`, persist в `src/stores/scheme.ts`, UI — `SchemePage` / `GalleryPage` + `UiConfirmDialog`.
+
+---
+
+## Деплой (GitHub Pages) — на паузе
+
+Вернёмся позже. Заготовка уже есть (workflow, `VITE_BASE`, redirect URLs в Supabase), но секреты Actions / включение Pages / push деплоя **не делаем**, пока снова не решим публиковать.
+
+Кратко, что уже подготовлено и что останется добить:
+
+- Workflow: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) — build с `VITE_BASE=/cross-stitch/`, `404.html` для SPA.
+- Локально `base` = `/` (без `VITE_BASE`).
+- TODO позже: GitHub Secrets (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), Pages Source = Actions, коммит/push; Site URL в Supabase при желании на `https://mika1ai.github.io/cross-stitch`.
+- Redirect URLs в Supabase уже включают локалку и `mika1ai.github.io/cross-stitch`.
 
 ---
 
 ## Данные схемы
 
-Формат `scheme.json`:
+Формат строки `schemes` (типы в `src/types/scheme.ts`):
 
 ```ts
 {
@@ -63,17 +119,28 @@
 }
 ```
 
-- Текущая схема: **165×235** (~39k клеток); `(0,0)` — слева сверху.
+- Шаблон грузится с сервера по `id`; `(0,0)` — слева сверху.
 - Отдельного `palette.json` нет — ключ только из `palette` внутри схемы.
-- Хелперы: `threadAt(index)`, `coordsAt(index)`.
+- Хелперы стора: `threadAt(index)`, `coordsAt(index)`.
 
 ---
 
-## Главный экран
+## Галерея
 
-Колонка `100svh`: тулбар → карточка схемы (`flex: 1`).
+`/gallery`: карточки схем (img из Storage + % progress). Клик открывает `/schemes/:id` (ensure progress). В хедере: настройки (`scope="general"` — только язык/тема) + logout (`IconsLogout`).
 
-**Тулбар (слева):**
+## Экран схемы
+
+Карточка схемы на весь `100svh` (с паддингом страницы); chrome **поверх** холста (`pointer-events` только на островках). В покое через **3 с** скрывается (opacity); снова показывается при взаимодействии с канвасом (pointer/wheel). Пока открыт leave/conflict confirm — не прячется:
+
+| Островок | Позиция | Состав |
+| --- | --- | --- |
+| Верх | один flex-ряд без wrap (`space-between`): режимы слева, nav справа; режимы → колонка, если горизонтально не влезают рядом с nav | палитра/сетка/навигатор/компас/прогресс · настройки + галерея |
+| Sync | справа снизу | только статус sync (без кнопки save) |
+
+**Выход из аккаунта только с галереи**, не со страницы схемы.
+
+**Режимы:**
 
 | Кнопка | Поведение |
 | --- | --- |
@@ -83,8 +150,6 @@
 | Компас | Toggle `showCompass` (стор); цвет `compassColor` |
 | Прогресс | Toggle `showProgress`: done в `colorCanvas` → `progressColor`; вуаль/крест скрыты. Опция `autoProgressOnZoomOut` — вкл. ниже порога крестиков (12), выкл. выше |
 
-**Тулбар (справа):** Настройки (`SchemeSettings`).
-
 `UiButton`: prop `color` задаёт акцент; виден при **hover** (только иконка/бордер) и при **`aria-pressed`** (ещё и фон `surface-hover`).
 
 ---
@@ -93,7 +158,7 @@
 
 - Модалка на весь экран (`UiModal`: Teleport, Esc, scroll-lock, swipe-handle вниз).
 - Поиск по коду (`code.includes`, pattern цифры/дефис), общий прогресс по **нескрытым** кодам.
-- Таблица: символ (текст или FA) | код | цвет | radio «Активный» | checkbox «Исключить» (`hiddenCodes`).
+- Таблица: символ поверх swatch цвета | код | radio «Активный» | checkbox «Исключить» (`hiddenCodes`).
 - Скрытый код: не в общем прогрессе; уже в `done` остаются, но крестики/progress-bake не рисуются; цвет на canvas остаётся.
 - Разделители строк с боковым inset (`--space-4`), как секции в настройках — не на всю ширину.
 - `done` по цвету из стора (`doneCountByColor`).
@@ -143,7 +208,7 @@
 
 ### Символы
 
-- Текст Roboto или FA из `fa-icon-map.json`; ink чёрный/белый по контрасту с цветом клетки после wash.
+- Текст Roboto или FA через временный `fa-icon-map.json` (lookup по `palette.icon`); ink чёрный/белый по контрасту с цветом клетки после wash.
 - При `cellPx >= 24`; ink кэшируется таблицей на палитру + строку wash.
 
 ### Zoom-wash
@@ -202,13 +267,14 @@
 
 ## Настройки (`SchemeSettings`)
 
+Prop `scope`: `all` (схема) | `general` (галерея и др. вне схемы — только «Общее»).
+
 Внешняя панель с бордером; внутри `UiScrollY`; секции разделены линиями (не отдельные карточки).
 
-**Язык** — radio `locale` (`ru` / `en`)
+**Общее** — radio `locale` (`ru` / `en`); тёмная тема (default вкл.; toggle → `data-theme` на `<html>`). App-global, не в `user_progress`. Доступно и вне схемы.
 
 **Отображение**
 
-- Тёмная тема (default вкл.; toggle → `data-theme` на `<html>`)
 - Приглушение при зуме (toggle) + цвет приглушения (`washColor`, alpha)
 - Цвет veil (`veilColor`, alpha)
 - Цвет готовых (`doneVeilColor`, alpha)
@@ -236,7 +302,7 @@
 | `done` / `lastDoneIndex` | Готовые клетки (last — старт навигатора) |
 | `hiddenCodes` | Коды вне общего прогресса / без крестиков (Set не чистит `done`) |
 | `locale` | Язык UI (`ru` / `en`); не входит в reset настроек схемы |
-| `compassFrom` / `compassTo` | Точки компаса |
+| `compassFrom` / `compassTo` | Точки компаса (в `settings`, переживают уход со схемы) |
 | `activeCode` / `activeCodeColor` | Выбор нитки + цвет маркера |
 | `gridSize` / `gridColor` | Блок-сетка |
 | `cellDividerColor` | Мелкая разлиновка |

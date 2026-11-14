@@ -3,11 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { tinycolor } from 'vue-color'
 import faIconMap from '../data/fa-icon-map.json'
-import {
-  schemeData,
-  threadAt,
-  type SchemePaletteEntry,
-} from '../data/scheme'
+import type { SchemePaletteEntry } from '../types/scheme'
 import { useSchemeStore } from '../stores/scheme'
 import {
   ACCENT_STROKE_CSS_PX,
@@ -78,10 +74,16 @@ const {
   autoProgressOnZoomOut,
 } = storeToRefs(schemeStore)
 
-const width = schemeData.width
-const height = schemeData.height
-const cells = schemeData.cells
-const palette = schemeData.palette
+const schemeTemplate = schemeStore.template
+if (!schemeTemplate) {
+  throw new Error('SchemeViewer requires a loaded scheme template')
+}
+const width = schemeTemplate.width
+const height = schemeTemplate.height
+const cells = schemeTemplate.cells
+const palette = schemeTemplate.palette
+const threadAt = (index: number) => schemeStore.threadAt(index)
+const coordsAt = (index: number) => schemeStore.coordsAt(index)
 
 function accentStrokeWidth() {
   return Math.max(ACCENT_STROKE_CSS_PX / scale.value, ACCENT_STROKE_MIN)
@@ -118,6 +120,8 @@ const navRoute = computed<NavRoute | null>(() => {
     cells.length,
     done.value,
     indicesByColor,
+    coordsAt,
+    (index) => threadAt(index).color,
   )
 })
 
@@ -696,7 +700,7 @@ function drawCellSymbol(
     return
   }
 
-  if (!cell.symbol || cell.symbol === '(пусто)') return
+  if (!cell.symbol) return
   ctx.font = `${BASE_CELL * 0.55}px Roboto, system-ui, sans-serif`
   ctx.fillText(cell.symbol, cx, cy)
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { acquireModalOpen, releaseModalOpen } from '../../lib/modal-open'
 
 defineProps<{
   title: string
@@ -114,6 +115,7 @@ function unlockBodyScroll() {
 
 watch(open, async (isOpen) => {
   if (isOpen) {
+    acquireModalOpen()
     clearDismissTimer()
     resetDrag()
     lockBodyScroll()
@@ -123,6 +125,7 @@ watch(open, async (isOpen) => {
     return
   }
 
+  releaseModalOpen()
   window.removeEventListener('keydown', onKeydown)
   unlockBodyScroll()
   previousFocus?.focus?.()
@@ -137,7 +140,10 @@ watch(open, async (isOpen) => {
 onBeforeUnmount(() => {
   clearDismissTimer()
   window.removeEventListener('keydown', onKeydown)
-  if (open.value) unlockBodyScroll()
+  if (open.value) {
+    releaseModalOpen()
+    unlockBodyScroll()
+  }
 })
 </script>
 

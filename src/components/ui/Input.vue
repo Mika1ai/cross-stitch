@@ -196,12 +196,20 @@ function applyPattern(value: string): string {
   return result
 }
 
-function onNativeInput(event: Event) {
-  const el = event.target as HTMLInputElement
+function syncFromNative(el: HTMLInputElement) {
   const next = applyPattern(el.value)
   if (next !== el.value) el.value = next
   model.value = next
   syncAutoGrow(next)
+}
+
+function onNativeInput(event: Event) {
+  syncFromNative(event.target as HTMLInputElement)
+}
+
+/** Autofill часто шлёт change без input — подхватываем в v-model. */
+function onNativeChange(event: Event) {
+  syncFromNative(event.target as HTMLInputElement)
 }
 
 function onBlur() {
@@ -272,6 +280,7 @@ onMounted(() => {
       :autocomplete="autocomplete"
       :inputmode="inputmode"
       @input="onNativeInput"
+      @change="onNativeChange"
       @blur="onBlur"
     />
     <button

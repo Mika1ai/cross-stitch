@@ -179,8 +179,17 @@ onBeforeUnmount(() => {
 }
 
 .color-picker__trigger--flat {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   pointer-events: none;
   cursor: default;
+}
+
+.color-picker--flat .color-picker__swatch {
+  width: var(--space-6);
+  height: var(--space-6);
 }
 
 .color-picker--disabled {

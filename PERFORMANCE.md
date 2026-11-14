@@ -162,7 +162,7 @@
 - `colorCanvas` одним `drawImage` — хорошо.
 - Zoom-wash одним `fillRect` — хорошо.
 - `scheduleDraw` через rAF — хорошо.
-- Компактный `scheme.json` + индексы — хорошо.
+- Компактный шаблон схемы (palette + индексы cells) — хорошо.
 - Стор / `doneCountByColor` — дёшево относительно canvas.
 - Done-метки (veil + крест) только при `cellPx >= 12`; ниже порога не рисуем — на полном отзуме pan не платит за десятки тысяч `fillRect` по `done`.
 

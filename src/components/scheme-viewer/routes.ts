@@ -1,4 +1,3 @@
-import { coordsAt, threadAt } from '../../data/scheme'
 import { BASE_CELL } from './constants'
 import type { NavRoute, NavSegment } from './types'
 
@@ -54,10 +53,12 @@ export function buildNavRouteFromDone(
   cellsLength: number,
   done: Set<number>,
   indicesByColor: Map<string, number[]>,
+  coordsAt: (index: number) => { x: number; y: number },
+  colorAt: (index: number) => string,
 ): NavRoute | null {
   if (fromIndex < 0 || fromIndex >= cellsLength) return null
   const from = coordsAt(fromIndex)
-  const fromColor = threadAt(fromIndex).color.toLowerCase()
+  const fromColor = colorAt(fromIndex).toLowerCase()
 
   const candidates = indicesByColor.get(fromColor) ?? []
   let bestIndex = -1

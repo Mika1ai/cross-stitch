@@ -17,7 +17,6 @@
     "columns": {
       "symbol": "Symbol",
       "code": "Code",
-      "color": "Color",
       "active": "Active",
       "exclude": "Exclude"
     },
@@ -28,13 +27,15 @@
     "title": "Settings",
     "open": "Open settings",
     "reset": "Reset settings to defaults",
+    "general": {
+      "title": "General",
+      "darkTheme": "Dark theme"
+    },
     "language": {
-      "title": "Language",
       "choose": "Choose language: {name}"
     },
     "display": {
       "title": "Display",
-      "darkTheme": "Dark theme",
       "softenOnZoom": "Soften colors when zoomed in",
       "washColor": "Fill wash color",
       "veilColor": "Out-of-focus veil color",
@@ -69,6 +70,93 @@
   "common": {
     "close": "Close",
     "clear": "Clear field",
-    "dragToClose": "Pull down to close"
+    "dragToClose": "Pull down to close",
+    "signOut": "Sign out",
+    "loading": "Loading…"
+  },
+  "auth": {
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "newPassword": "New password"
+    },
+    "signIn": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "forgot": "Forgot password?",
+      "toSignUp": "Create an account"
+    },
+    "signUp": {
+      "title": "Sign up",
+      "submit": "Create account",
+      "toSignIn": "Already have an account? Sign in"
+    },
+    "forgot": {
+      "title": "Reset password",
+      "lead": "We'll email you a link to choose a new password.",
+      "submit": "Send link",
+      "back": "Back to sign in"
+    },
+    "confirm": {
+      "title": "Check your email",
+      "leadSignup": "We sent a confirmation link to your inbox.",
+      "leadRecovery": "We sent a password reset link to your inbox.",
+      "resend": "Resend email",
+      "resent": "Email sent again.",
+      "toSignIn": "Back to sign in"
+    },
+    "reset": {
+      "title": "New password",
+      "lead": "Choose a new password for your account.",
+      "submit": "Save password"
+    },
+    "callback": {
+      "title": "Signing in…",
+      "working": "Confirming your link.",
+      "toSignIn": "Back to sign in"
+    },
+    "errors": {
+      "generic": "Something went wrong",
+      "passwordMismatch": "Passwords do not match",
+      "passwordShort": "Password must be at least 6 characters",
+      "callbackNoSession": "Could not confirm the link"
+    }
+  },
+  "gallery": {
+    "title": "Charts",
+    "empty": "No charts yet",
+    "progress": "{percent}%",
+    "open": "Open chart {title}",
+    "loadError": "Could not load the catalog"
+  },
+  "scheme": {
+    "loadError": "Could not open the chart",
+    "backToGallery": "Back to gallery"
+  },
+  "sync": {
+    "saving": "Saving…",
+    "savedAt": "Saved at {time}",
+    "unsaved": "Unsaved changes",
+    "leaveTitle": "Unsaved changes",
+    "leaveAsk": "Save to the cloud before leaving?",
+    "leaveSave": "Save",
+    "leaveDiscard": "Don't save",
+    "leaveCancel": "Cancel",
+    "conflictTitle": "Progress differs",
+    "conflictAsk": "Which version should we keep?",
+    "conflictKeepLocal": "Keep this device",
+    "conflictUseServer": "Use server",
+    "conflictLater": "Decide later",
+    "signOutTitle": "Unsaved changes",
+    "signOutAsk": "Save before signing out?",
+    "signOutSave": "Save and sign out",
+    "signOutDiscard": "Sign out without saving",
+    "signOutCancel": "Cancel",
+    "diffStitches": "This device: {local} stitches\nServer: {server} stitches",
+    "diffStitchesInline": "device {local} / server {server} stitches",
+    "diffSettings": "Scheme settings differ (colors, display, etc.).",
+    "diffSettingsInline": "settings differ",
+    "diffSeveral": "Unsynced drafts: {count}."
   }
 }

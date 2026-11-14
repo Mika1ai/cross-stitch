@@ -1,24 +1,27 @@
 :root {
-  /* Colors — светлая тема */
-  --color-bg: #f7f6f4;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f0efec;
-  --color-text: #1c1b1a;
-  --color-text-muted: #6b6864;
-  --color-border: #d8d5d0;
-  --color-focus: #1c1b1a;
+  /* Colors — тёмная тема по умолчанию */
+  --color-bg: #161514;
+  --color-surface: #22201e;
+  --color-surface-hover: #2c2a27;
+  --color-text: #f0efec;
+  --color-text-muted: #9a9590;
+  --color-border: #3f3c38;
+  --color-focus: #f0efec;
+  --color-danger: #f97066;
+  --color-overlay: color-mix(in srgb, #000 60%, transparent);
   /* Checkerboard (alpha-превью в ColorPicker) */
-  --color-checker-light: #ffffff;
-  --color-checker-dark: #d0d0d0;
+  --color-checker-light: #3f3c38;
+  --color-checker-dark: #1c1b1a;
   --border-width: 2px;
   --scrollbar-size: 0.5rem;
   /* Controls / ghost UI */
   --control-height: 2.25rem;
   --opacity-ghost: 0.85;
+  --opacity-disabled: 0.6;
   /* Shadows */
-  --shadow-thumb: 0 0 0 var(--border-width) #0000000f;
+  --shadow-thumb: 0 0 0 var(--border-width) #ffffff14;
   --shadow-inset-border: inset 0 0 0 var(--border-width) var(--color-border);
-  color-scheme: light;
+  color-scheme: dark;
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -61,17 +64,19 @@
   --ease-out: ease;
 }
 
-/* Тёмная тема — warm, в тон светлой */
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --color-bg: #161514;
-  --color-surface: #22201e;
-  --color-surface-hover: #2c2a27;
-  --color-text: #f0efec;
-  --color-text-muted: #9a9590;
-  --color-border: #3f3c38;
-  --color-focus: #f0efec;
-  --color-checker-light: #3f3c38;
-  --color-checker-dark: #1c1b1a;
-  --shadow-thumb: 0 0 0 var(--border-width) #ffffff14;
+/* Светлая тема */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #f7f6f4;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0efec;
+  --color-text: #1c1b1a;
+  --color-text-muted: #6b6864;
+  --color-border: #d8d5d0;
+  --color-focus: #1c1b1a;
+  --color-danger: #b42318;
+  --color-overlay: color-mix(in srgb, #000 45%, transparent);
+  --color-checker-light: #ffffff;
+  --color-checker-dark: #d0d0d0;
+  --shadow-thumb: 0 0 0 var(--border-width) #0000000f;
 }

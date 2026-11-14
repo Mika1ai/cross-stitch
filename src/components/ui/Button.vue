@@ -63,6 +63,11 @@ withDefaults(
   outline-offset: var(--border-width);
 }
 
+.button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: wait;
+}
+
 .button[aria-pressed='true'] {
   border-color: var(--button-accent-color, var(--color-text));
   background: var(--color-surface-hover);
