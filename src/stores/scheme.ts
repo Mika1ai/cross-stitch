@@ -644,6 +644,7 @@ export const useSchemeStore = defineStore('scheme', () => {
     persistSuspended = true
     applySnapshot({
       ...baseline,
+      updatedAt: new Date().toISOString(),
       dirty: false,
       lastSyncedAt: lastSyncedAt.value,
       lastSynced: progressContentOf(baseline),
