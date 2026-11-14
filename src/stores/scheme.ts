@@ -676,6 +676,9 @@ export const useSchemeStore = defineStore('scheme', () => {
     darkTheme,
     (on) => {
       document.documentElement.dataset.theme = on ? 'dark' : 'light'
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute('content', on ? '#161514' : '#f7f6f4')
       localStorage.setItem(DARK_THEME_KEY, String(on))
     },
     { immediate: true },

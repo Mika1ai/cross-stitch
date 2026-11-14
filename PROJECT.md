@@ -93,16 +93,20 @@ Email+password, confirm email ON. Redirect URL: `/auth/callback`.
 
 ---
 
-## Деплой (GitHub Pages) — на паузе
+## Деплой (GitHub Pages)
 
-Вернёмся позже. Заготовка уже есть (workflow, `VITE_BASE`, redirect URLs в Supabase), но секреты Actions / включение Pages / push деплоя **не делаем**, пока снова не решим публиковать.
+- Сайт: `https://mika1ai.github.io/cross-stitch/`
+- Workflow: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) — `VITE_BASE=/cross-stitch/`, SPA `404.html`
+- Локально `base` = `/` (без `VITE_BASE`)
+- Secrets: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 
-Кратко, что уже подготовлено и что останется добить:
+### PWA (iPhone 7 / iOS 15)
 
-- Workflow: [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) — build с `VITE_BASE=/cross-stitch/`, `404.html` для SPA.
-- Локально `base` = `/` (без `VITE_BASE`).
-- TODO позже: GitHub Secrets (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`), Pages Source = Actions, коммит/push; Site URL в Supabase при желании на `https://mika1ai.github.io/cross-stitch`.
-- Redirect URLs в Supabase уже включают локалку и `mika1ai.github.io/cross-stitch`.
+- `public/manifest.webmanifest` — `display: standalone`, относительные `start_url` / `scope` / icons (ок с `/cross-stitch/`)
+- PNG: `public/icons/apple-touch-180.png`, `pwa-192.png`, `pwa-512.png` (перегенерация: `pnpm icons:pwa`)
+- В `index.html`: apple-meta + `apple-touch-icon` + link на manifest
+- На iPhone: Safari → Поделиться → **На экран «Домой»** → открыть иконку (без строки Safari)
+- Service Worker пока не подключали — для Add to Home Screen на iOS не обязателен
 
 ---
 
