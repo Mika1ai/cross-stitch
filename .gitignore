@@ -15,8 +15,10 @@ dist-ssr
 .env.*
 !.env.example
 
-# Local notes / generated
+# Local notes / generated (README + PROJECT stay tracked)
 *.md
+!README.md
+!PROJECT.md
 src/components.d.ts
 
 # Editor directories and files
