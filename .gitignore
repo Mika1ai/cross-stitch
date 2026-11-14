@@ -15,6 +15,10 @@ dist-ssr
 .env.*
 !.env.example
 
+# Local notes / generated
+*.md
+src/components.d.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
